@@ -13,6 +13,7 @@ Privacy-Aware IPv6 IoT Security Monitoring Across Address Rotation
 | **Team Members** | Akrit Goyal, Vedika Pathak |
 | **Faculty Mentor** | Sachin Kumar |
 | **Problem Statement** | Privacy-Aware IPv6 IoT Security Monitoring Across Address Rotation |
+| **Problem Statement Code** | A3-PS007-TC236 |
 | **Domain** | Cybersecurity / IoT / IPv6 / Privacy |
 | **Submission Date** | October 7, 2026 |
 
@@ -20,7 +21,7 @@ Privacy-Aware IPv6 IoT Security Monitoring Across Address Rotation
 
 ## Executive Summary
 
-A privacy-preserving IPv6 IoT security monitoring system that detects suspicious address rotation and reconnect anomalies without exposing raw device identities or sensitive network data.
+A privacy-aware IPv6 IoT security monitoring prototype that flags repeated address rotation without returning raw device identifiers or full IPv6 addresses in operator-facing API responses.
 
 ---
 
@@ -28,7 +29,7 @@ A privacy-preserving IPv6 IoT security monitoring system that detects suspicious
 
 The rapid growth of IPv6 adoption in IoT networks introduces new security challenges, particularly when devices frequently rotate addresses due to SLAAC, DHCPv6, network churn, or privacy extensions. These address rotations can be exploited by malicious actors to impersonate trusted devices, evade detection, and bypass conventional monitoring systems. To address this, we propose a privacy-aware IPv6 security monitoring solution that detects suspicious rotation and reconnect patterns without compromising user or device privacy.
 
-Our system ingests IoT telemetry, pseudonymizes device identities using HMAC-based keys, redacts IPv6 addresses in operator-facing summaries, and analyzes abnormal behaviors such as rapid address changes, unexpected reconnect sequences, and suspicious network segment transitions. A lightweight FastAPI backend stores the telemetry and alert records in SQLite, enabling rapid deployment and easy demonstration in a hackathon environment. The solution provides explainable, sanitized alerts and summary endpoints that help security teams identify threats while preserving privacy.
+Our prototype ingests IoT telemetry, pseudonymizes device identities and address fingerprints using HMAC-based keys, and flags repeated address changes within a 15-minute window. Full IPv6 values are retained internally in the demo database but omitted from summary and alert API responses. A lightweight FastAPI backend and SQLite database make the workflow straightforward to demonstrate in a hackathon environment.
 
 This project demonstrates an effective balance between operational security and privacy protection in modern IoT environments, making it highly relevant for cybersecurity, privacy-preserving monitoring, and next-generation network defense.
 
@@ -37,13 +38,13 @@ This project demonstrates an effective balance between operational security and 
 ## Project Impact
 
 1. **Detects Suspicious IPv6 Rotation Behavior**
-   - Identifies rapid, anomalous IPv6 address changes that deviate from normal device behavior
-   - Flags reconnect patterns indicative of device impersonation or network abuse
-   - Provides risk scoring and confidence metrics for each detected anomaly
+   - Identifies repeated IPv6 address changes within a 15-minute window
+   - Produces a medium-severity alert with a demo risk score for review
+   - Does not currently analyze reconnect sequences or network-segment changes
 
 2. **Preserves Privacy Through Pseudonymization and Redaction**
    - Device identities are transformed into HMAC-SHA256 pseudonyms, preventing raw ID exposure
-   - IPv6 addresses are redacted in summaries while maintaining operational visibility
+   - Full IPv6 addresses are stored internally for the prototype's analysis but omitted from summary and alert responses
    - Alerts are sanitized to exclude personally identifiable or operationally sensitive information
    - Designed for privacy-aware operational deployment in regulated environments
 
@@ -70,7 +71,6 @@ IoT Devices / Telemetry Sources
            |
            ├──> Monitoring Engine
            |      • Rotation heuristics
-           |      • Reconnect anomaly detection
            |      • Risk scoring
            |
            ├──> SQLite Database
@@ -87,10 +87,10 @@ IoT Devices / Telemetry Sources
 ## Key Features
 
 - **Privacy-First Pseudonymization**: Device IDs are transformed into stable HMAC-SHA256 hashes
-- **IPv6 Redaction**: Full addresses are never exposed in summaries or alerts
+- **Limited API Disclosure**: Summary and alert responses omit full IPv6 addresses
 - **FastAPI-Based Ingestion**: Lightweight, high-performance event collection and processing
 - **SQLite Persistence**: Rapid deployment without external database dependencies
-- **Anomaly Detection Heuristics**: Detects rapid rotations, reconnect loops, and unusual patterns
+- **Anomaly Detection Heuristics**: Detects two or more consecutive address changes within 15 minutes
 - **Explainable Alerts**: Human-readable, sanitized alert payloads for operators
 - **Docker-Ready**: Containerized deployment for hackathon and cloud environments
 - **Easy Demo Flow**: Designed to showcase privacy and security in under 5 minutes
@@ -204,7 +204,9 @@ curl -X POST "http://localhost:8000/api/v1/events" \
   }'
 ```
 
-This triggers an anomaly alert due to rapid address change.
+One changed address does not meet the rotation threshold by itself. Submit two
+additional events for the same device with distinct addresses within 15 minutes
+to trigger the alert.
 
 ### 3. Fetch Summary
 
@@ -223,7 +225,7 @@ curl http://localhost:8000/api/v1/summary
       "device_key": "a1b2c3d4e5f6...",
       "severity": "medium",
       "title": "Rapid IPv6 Rotation Detected",
-      "description": "Device rotated IPv6 address 2 times within 60 seconds.",
+      "description": "Device changed address 2 times within 15 minutes.",
       "score": 7.5,
       "created_at": "2026-10-07T11:15:22Z"
     }
@@ -243,7 +245,7 @@ curl http://localhost:8000/api/v1/alerts
 
 1. **Setup** (1 min): Start the API server and open a terminal.
 2. **Normal Behavior** (1 min): Send 2–3 normal telemetry events from a device.
-3. **Trigger Anomaly** (1 min): Send a rapid address rotation event.
+3. **Trigger Anomaly** (1 min): Send two additional events for the same device with distinct IPv6 addresses within 15 minutes.
 4. **Show Results** (1 min): Query `/api/v1/summary` to display the alert without exposing device IDs or full IPv6 addresses.
 5. **Explain Privacy** (1 min): Highlight the pseudonymized device_key, redacted IPv6, and explainable alert text.
 
@@ -287,6 +289,17 @@ This submission aligns with the hackathon's focus on **Cybersecurity & IoT**:
 ✅ **Privacy Module**: HMAC and redaction utilities  
 ✅ **Database Models**: SQLAlchemy ORM for telemetry and alerts  
 ✅ **Hackathon Submission**: This document with team info, abstract, and impact statement  
+⏳ **Demo Video**: Record and upload to YouTube, then replace the pending URL below and in `README.md`
+
+### Demo video link
+
+**YouTube URL:** Pending recording and upload.
+
+**Local silent explainer:** [`assets/aiori-3-demo-explainer.mp4`](assets/aiori-3-demo-explainer.mp4)
+
+See [`DEMO_RECORDING_SCRIPT.md`](DEMO_RECORDING_SCRIPT.md) for the shot list,
+narration, and publishing checklist. The AIORI-3 guideline asks teams to
+upload the video to YouTube and add its link to the GitHub repository.
 
 ---
 

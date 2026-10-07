@@ -5,7 +5,8 @@ from typing import List
 
 from app.database import engine, SessionLocal, Base
 from app.models import TelemetryEvent, AlertRecord
-from app.privacy import stable_device_key, redact_ipv6, format_alert_payload
+from app.config import get_settings
+from app.privacy import stable_device_key
 from app.anomaly import inspect_rotation
 
 # Create tables
@@ -16,6 +17,7 @@ app = FastAPI(
     description="Detects suspicious IPv6 address rotation while preserving privacy",
     version="1.0.0"
 )
+settings = get_settings()
 
 # Dependency for database session
 def get_db():
@@ -108,10 +110,10 @@ def ingest_event(event: TelemetryEventRequest, db: Session = Depends(get_db)):
     """
     try:
         # Generate device pseudonym
-        device_key = stable_device_key(event.device_id)
+        device_key = stable_device_key(event.device_id, settings.SECRET_KEY)
         
         # Create address fingerprint for comparison
-        address_fingerprint = stable_device_key(event.ipv6_address)
+        address_fingerprint = stable_device_key(event.ipv6_address, settings.SECRET_KEY)
         
         # Store the raw telemetry event
         db_event = TelemetryEvent(
@@ -140,8 +142,8 @@ def ingest_event(event: TelemetryEventRequest, db: Session = Depends(get_db)):
         # Convert ORM objects to dicts for anomaly inspection
         events_list = [
             {
-                "device_id": event.device_key,  # Using device_key as id for anomaly logic
-                "ipv6_address": e.ipv6_address,
+                "device_id": e.device_key,
+                "ipv6_address": e.address_fingerprint,
                 "observed_at": e.observed_at
             }
             for e in recent_events

@@ -15,7 +15,7 @@ This project proposes a privacy-aware monitoring framework that:
 - captures telemetry from IoT devices,
 - pseudonymizes device identities using HMAC-based keys,
 - stores and analyzes IPv6 rotation behavior without exposing raw identity details,
-- flags anomalies such as rapid rotation, reconnect patterns, and abnormal device behavior,
+- flags repeated IPv6 address changes within a configurable monitoring window,
 - provides redacted and explainable alert summaries for operators.
 
 The system is designed for easy deployment in a hackathon environment, with a lightweight Python + FastAPI backend and SQLite persistence.
@@ -43,7 +43,6 @@ IoT Devices / Telemetry Sources
            |
            +--> Monitoring Engine
            |      - rotation heuristics
-           |      - reconnect anomaly checks
            |      - risk scoring
            |
            +--> SQLite Database
@@ -61,7 +60,7 @@ IoT Devices / Telemetry Sources
 - IPv6 endpoint redaction for safe operational reporting
 - FastAPI-based ingest and summary endpoints
 - SQLite-backed data persistence for rapid demo deployment
-- Anomaly detection around IPv6 rotation and reconnect behaviors
+- Anomaly detection for repeated IPv6 address changes within a 15-minute window
 - Redacted alert payloads and explainable security insights
 - Docker-ready runtime for simple setup and showcase
 
@@ -75,18 +74,15 @@ IoT Devices / Telemetry Sources
 
 ### Privacy Controls
 - Device IDs are transformed into HMAC-SHA256 pseudonyms
-- IPv6 addresses are stored in redacted / normalized form when exposed in summaries
+- Full IPv6 addresses are stored internally for demo analysis but omitted from summary and alert API responses
 - Alerts are designed to avoid leaking raw identifying data
 
 ### Security Logic
-The monitoring engine evaluates signals such as:
-
-- rapid succession of IPv6 changes,
-- reconnect attempts from unusual address patterns,
-- repeated abnormal joins from the same device identity,
-- suspicious deviations from established network segment behavior.
-
-These heuristics generate a risk score and a human-readable alert for review.
+The current monitoring engine counts consecutive address-fingerprint changes
+for a pseudonymized device within a 15-minute window. Two or more changes
+generate a medium-severity alert with a fixed demo score and a human-readable
+description. Reconnect and network-segment anomaly checks are potential future
+work, not implemented detection signals.
 
 ## 7. Quick Start
 
@@ -137,13 +133,23 @@ curl http://localhost:8000/api/v1/alerts
 
 1. Start the API server.
 2. Send a normal device telemetry event.
-3. Send a second event with a rotated IPv6 address.
+3. Send two additional events for that device with distinct IPv6 addresses within 15 minutes.
 4. Observe the generated alert and summary.
 5. Verify that the output remains privacy-aware and redacted.
 
 This creates a clear, convincing hackathon demo showing that the system identifies suspicious rotation patterns without exposing private data.
 
-## 10. Privacy and Security Considerations
+## 10. Demo Video
+
+**YouTube demo video:** Pending recording and upload. Add the public or
+unlisted YouTube URL here before submitting.
+
+The local silent explainer is [`assets/aiori-3-demo-explainer.mp4`](assets/aiori-3-demo-explainer.mp4).
+Use [`DEMO_RECORDING_SCRIPT.md`](DEMO_RECORDING_SCRIPT.md) for the live-demo
+shot list, narration, and publishing steps. The AIORI-3 guideline asks teams
+to upload the video to YouTube and add its link to the GitHub repository.
+
+## 11. Privacy and Security Considerations
 
 This project is intentionally designed around minimal disclosure:
 
@@ -152,7 +158,7 @@ This project is intentionally designed around minimal disclosure:
 - alert content is sanitized and operator-friendly,
 - data is structured for demonstration and extension into production-grade security pipelines.
 
-## 11. Evaluator Relevance
+## 12. Evaluator Relevance
 
 This submission aligns with modern security and IoT themes because it combines:
 
@@ -161,7 +167,7 @@ This submission aligns with modern security and IoT themes because it combines:
 - privacy-preserving design,
 - lightweight deployment suitable for research and hackathon demos.
 
-## 12. Future Enhancements
+## 13. Future Enhancements
 
 - Deploy on edge gateways or smart-home environments
 - Add a dashboard visualization for active devices and alerts
@@ -169,15 +175,14 @@ This submission aligns with modern security and IoT themes because it combines:
 - Expand to DHCPv6 and SLAAC behavior-based detection
 - Add support for multi-device correlation and timeline analysis
 
-## 13. Team / Mentor Information
+## 14. Team / Mentor Information
 
-Add the following before final submission:
+- **Team Name:** Last Minute Coders
+- **Team Members:** Akrit Goyal, Vedika Pathak
+- **Faculty Mentor:** Sachin Kumar
+- **Problem Statement Selected:** Privacy-Aware IPv6 IoT Security Monitoring Across Address Rotation
+- **Problem Statement Code:** A3-PS007-TC236
 
-- Team Name:
-- Team Members:
-- Faculty Mentor:
-- Problem Statement Selected:
-
-## 14. License
+## 15. License
 
 MIT
