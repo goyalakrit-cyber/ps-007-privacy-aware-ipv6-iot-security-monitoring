@@ -173,10 +173,12 @@ This submission aligns with modern security and IoT themes because it combines:
 
 Add the following before final submission:
 
-- Team Name:
-- Team Members:
-- Faculty Mentor:
-- Problem Statement Selected:
+- Team Name: Last Minute Coders
+- Team Code: A3-PS007-TC236
+- Team Members: Akrit Goyal ,Vedika Pathak
+- Faculty Mentor: Sachin Kumar
+- Problem Statement Selected:Privacy-Aware IPv6 IoT Security Monitoring Across Address Rotation
+- Institute Name: Invertis University
 
 ## 14. License
 
