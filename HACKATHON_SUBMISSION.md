@@ -13,7 +13,7 @@ Privacy-Aware IPv6 IoT Security Monitoring Across Address Rotation
 | **Team Members** | Akrit Goyal, Vedika Pathak |
 | **Faculty Mentor** | Sachin Kumar |
 | **Problem Statement** | Privacy-Aware IPv6 IoT Security Monitoring Across Address Rotation |
-| **Domain** | Cybersecurity / IoT / IPv6 / Privacy |
+| **Domain** | Cloud Computing/ IoT / IPv6 / Privacy |
 | **Submission Date** | October 7, 2026 |
 
 ---
