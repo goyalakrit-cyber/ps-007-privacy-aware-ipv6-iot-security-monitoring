@@ -297,6 +297,8 @@ This submission aligns with the hackathon's focus on **Cybersecurity & IoT**:
 
 **Local silent explainer:** [`assets/aiori-3-demo-explainer.mp4`](assets/aiori-3-demo-explainer.mp4)
 
+**Hackathon presentation:** [`assets/AIORI-3-Hackathon-Presentation.pptx`](assets/AIORI-3-Hackathon-Presentation.pptx)
+
 See [`DEMO_RECORDING_SCRIPT.md`](DEMO_RECORDING_SCRIPT.md) for the shot list,
 narration, and publishing checklist. The AIORI-3 guideline asks teams to
 upload the video to YouTube and add its link to the GitHub repository.

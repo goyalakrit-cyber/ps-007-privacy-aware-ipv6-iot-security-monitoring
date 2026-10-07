@@ -149,6 +149,10 @@ Use [`DEMO_RECORDING_SCRIPT.md`](DEMO_RECORDING_SCRIPT.md) for the live-demo
 shot list, narration, and publishing steps. The AIORI-3 guideline asks teams
 to upload the video to YouTube and add its link to the GitHub repository.
 
+The editable hackathon pitch deck is
+[`assets/AIORI-3-Hackathon-Presentation.pptx`](assets/AIORI-3-Hackathon-Presentation.pptx);
+see [`PRESENTATION_NOTES.md`](PRESENTATION_NOTES.md) for presenter guidance.
+
 ## 11. Privacy and Security Considerations
 
 This project is intentionally designed around minimal disclosure:
